@@ -56,3 +56,28 @@ Enums:
 Use claude-haiku-4-5-20251001 for Writer + Tagger at scale.
 Use claude-sonnet-4-6 only for quality checks or ambiguous papers.
 Batch API calls where possible (up to 20 papers per run).
+
+## Confidence Scoring
+Tagger outputs confidence score (0.0–1.0) per extracted field.
+Add to json_schema response_format:
+
+  "confidence": {
+    "sports": 0.95,
+    "body_regions": 0.80,
+    "topics": 0.90,
+    "evidence_level": 0.85
+  }
+
+Thresholds:
+  ≥ 0.85 → auto-commit tag
+  0.60–0.84 → flag for review (status: "needs_review" in enrichments table)
+  < 0.60 → reject tag, leave field null
+
+Low-confidence papers are stored but excluded from feed until manually reviewed.
+
+## Reflection / Self-Critique (Writer stage)
+After generating summary, Writer runs a self-check pass:
+  - Does summary contradict the abstract? → regenerate
+  - Does summary contain coaching language ("you should", "try to")? → strip and rewrite
+  - Is summary > 120 words? → truncate at sentence boundary
+Max 1 retry. If still failing after retry → flag paper, skip enrichment.
