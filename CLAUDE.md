@@ -33,6 +33,7 @@ NOT an AI coach. NOT a training app. A research intelligence layer.
 - DB schema / migrations → data-model
 - React components / feed UI → frontend-patterns
 - API queries / search terms → research-knowledge
+- Cost tracking → cost (via /cost command + logs/pipeline_costs.jsonl)
 
 ## Parallel development workflow
 - Feature work → always in a worktree: `claude --worktree feature/<name>`
@@ -50,6 +51,10 @@ Railway watches `deploy` branch. Vercel watches `deploy` branch.
 - /cost after long sessions
 - /clear when context is polluted or task fully done
 - Never @-include full files in CLAUDE.md — reference paths instead
+- /plan before any non-trivial implementation
+- /doctor at start of every new session
+- /memory before /compact to persist state
+- /strategy when making architecture decisions
 
 ## Commit style
 Conventional Commits: feat:, fix:, chore:, docs:, pipeline:, data:
