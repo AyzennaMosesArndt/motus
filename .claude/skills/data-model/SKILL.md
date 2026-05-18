@@ -40,6 +40,12 @@ CREATE TABLE enrichments (
   sample_size         int,
   population          text,
   practical_relevance boolean DEFAULT true,
+  confidence_sports      float CHECK (confidence_sports BETWEEN 0 AND 1),
+  confidence_regions     float CHECK (confidence_regions BETWEEN 0 AND 1),
+  confidence_topics      float CHECK (confidence_topics BETWEEN 0 AND 1),
+  confidence_evidence    float CHECK (confidence_evidence BETWEEN 0 AND 1),
+  enrichment_status      text DEFAULT 'pending',
+                         -- pending | auto_committed | needs_review | rejected
   created_at          timestamptz DEFAULT now()
 );
 ```
@@ -88,6 +94,7 @@ CREATE INDEX ON papers (doi) WHERE doi IS NOT NULL;
 CREATE INDEX ON enrichments USING GIN (sports);
 CREATE INDEX ON enrichments USING GIN (body_regions);
 CREATE INDEX ON enrichments USING GIN (tags);
+CREATE INDEX ON enrichments (enrichment_status);
 CREATE INDEX ON saves (user_id, list_name);
 ```
 
