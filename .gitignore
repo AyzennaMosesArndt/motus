@@ -1,0 +1,38 @@
+# Environment
+.env
+.env.local
+.env.development
+.env.production
+apps/worker/.env
+
+# Claude local overrides
+CLAUDE.local.md
+
+# Worktrees
+.claude/worktrees/
+trees/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+apps/worker/.venv/
+*.egg-info/
+
+# Node
+node_modules/
+apps/web/node_modules/
+apps/web/.next/
+apps/web/out/
+
+# Supabase
+.supabase/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/

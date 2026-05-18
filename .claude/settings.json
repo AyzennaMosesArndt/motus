@@ -1,0 +1,50 @@
+{
+  "model": "claude-sonnet-4-6",
+  "permissions": {
+    "allow": [
+      "Bash(python*)",
+      "Bash(pytest*)",
+      "Bash(npm*)",
+      "Bash(npx*)",
+      "Bash(supabase*)",
+      "Bash(git*)",
+      "Bash(curl*)",
+      "Bash(cat*)",
+      "Bash(ls*)",
+      "Bash(mkdir*)",
+      "Read(**)",
+      "Write(apps/**)",
+      "Write(supabase/migrations/**)",
+      "Write(docs/**)",
+      "Write(.claude/**)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Write(.env*)",
+      "Write(*.pem)",
+      "Write(*.key)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write(apps/worker/**/*.py)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd apps/worker && python -m pytest tests/ -q --tb=short 2>&1 | tail -20"
+          }
+        ]
+      },
+      {
+        "matcher": "Write(apps/web/**/*.tsx)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd apps/web && npx tsc --noEmit 2>&1 | tail -20"
+          }
+        ]
+      }
+    ]
+  }
+}
