@@ -1,4 +1,4 @@
-# Sports Science Intelligence Platform
+# Motus
 
 ## What this is
 Personalized sports science discovery for endurance athletes (hobby & elite).

@@ -1,4 +1,4 @@
-# Sports Science Intelligence Platform
+# Motus
 
 > Personalized sports science discovery for endurance athletes.
 
@@ -63,7 +63,7 @@ Key patterns demonstrated:
 ```bash
 # Clone and enter
 git clone <repo>
-cd sports-science-platform
+cd motus
 
 # Frontend
 cd apps/web && npm install && npm run dev
