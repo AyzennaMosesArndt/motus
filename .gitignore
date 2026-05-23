@@ -28,6 +28,7 @@ apps/web/out/
 
 # Supabase
 .supabase/
+supabase/.temp/
 
 # OS
 .DS_Store
