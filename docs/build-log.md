@@ -32,4 +32,23 @@
 
 **Commit:** (pending)
 
-**Next:** Stage 2 — Data Pipeline Specification + API Exploration
+**Next:** Stage 2 — Data Pipeline Specification + API Exploration (complete — see below)
+
+---
+
+## [Stage 2 — Data Pipeline Spec + API Exploration] ✅
+
+**Completed:**
+- docs/data-pipeline-spec.md written (65 PubMed queries, 10 arXiv, 10 S2, 6 RSS feeds, full taxonomy, field mappings, quality filters, rate limits)
+- Live API tests against PubMed, arXiv, Crossref, RSS (BJSM)
+- PubMed: 381/270/519 papers for 3 test queries, field mapping confirmed, API key confirmed
+- arXiv: HTTPS redirect noted, source_url=entry.id, signal ratio low
+- Crossref: abstract absent (paywalled), polite User-Agent confirmed, validation-only use
+- RSS/BJSM: RSS 1.0 RDF format, 14 items, DOI not in URL — feedparser + PubMed lookup pattern
+- Semantic Scholar: leer-rohr pattern documented, field mappings for when key available
+- docs/api-findings.md updated with all source_name values, source_url construction, complete field mappings
+- Code review: NEEDS_CHANGES → fixed critical field mapping gaps → PASS
+
+**Commit:** (pending)
+
+**Next:** Stage 3 — Supabase Schema
