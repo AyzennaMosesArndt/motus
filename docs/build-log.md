@@ -51,4 +51,23 @@
 
 **Commit:** (pending)
 
-**Next:** Stage 3 — Supabase Schema
+**Next:** Stage 3 — Supabase Schema (complete — see below)
+
+---
+
+## [Stage 3 — Database Schema] ✅
+
+**Completed:**
+- 6 SQL migrations: papers, enrichments, users, saves, ingestion_queue, RLS
+- Code review: NEEDS_CHANGES → fixed 3 criticals:
+  - paper_id NOT NULL on enrichments
+  - enrichment_status CHECK constraint (7 valid values)
+  - WITH CHECK (true) on service_role ingestion_queue policy
+- Added: anon read policies for public browsing, saves(paper_id) index, GRANT statements
+- TypeScript types: apps/web/types/supabase.ts (handwritten from schema)
+- Supabase project reachable (200 OK), tables exist
+- CLI link pending: run `supabase login --token <PAT>` then `supabase db push`
+
+**Commit:** (pending)
+
+**Next:** Stage 4 — Python Ingestion Pipeline
