@@ -1,1 +1,63 @@
-# placeholder
+Extract structured metadata from this sports science paper abstract.
+Respond ONLY with valid JSON.
+No preamble. No markdown. No explanation.
+Just the JSON object — nothing else.
+
+Schema:
+{
+  "sports": [],
+  "body_regions": [],
+  "topics": [],
+  "evidence_level": null,
+  "study_type": null,
+  "sample_size": null,
+  "population": null,
+  "confidence": {
+    "sports": 0.0,
+    "body_regions": 0.0,
+    "topics": 0.0,
+    "evidence_level": 0.0
+  }
+}
+
+Allowed values:
+
+sports (use only these):
+  running | cycling | rowing | skiing | hyrox | inline_skating
+
+body_regions (use only these):
+  calves | quads | hamstrings | glutes | core | lower_back |
+  hip_flexors | knees | achilles | shoulders | neck | grip_forearms |
+  hip_abductors | ankles | it_band | foot | lats
+
+topics (use only these):
+  vo2max | lactate | hrv | cardiac_output | altitude | biomechanics |
+  pacing | heat_performance | fatigue | periodization | intervals |
+  strength | overtraining | sleep | active_recovery | passive_recovery |
+  hrv_recovery | carbohydrates | protein | hydration | supplements |
+  gut_health | tendon | stress_fracture | it_band | plantar_fascia |
+  knee | hamstring | prevention | psychology | pacing_strategy | pain_tolerance
+
+study_type (use only these):
+  RCT | cohort | review | case_study | mechanistic | meta_analysis | cross_sectional
+
+population (use only these):
+  recreational | trained | elite | mixed | unknown
+
+evidence_level:
+  1 = RCT or meta-analysis
+  2 = Cohort or controlled study
+  3 = Case study or small N
+  4 = Mechanistic or narrative review
+
+Confidence scoring rules:
+  0.85-1.0 = clearly and explicitly stated in the abstract
+  0.60-0.84 = implied or partially stated
+  0.0-0.59  = uncertain or not mentioned
+
+Sport-body region validation:
+  If sport=running, prefer body_regions from: calves, quads, hamstrings,
+    glutes, core, achilles, knees, foot, it_band
+  If sport=cycling, prefer: quads, hip_flexors, lower_back, knees, neck
+  If sport=rowing, prefer: lats, core, quads, lower_back, grip_forearms, shoulders
+  If no body region mentioned in abstract: return []
