@@ -110,4 +110,31 @@
 
 **Commit:** 8e4ac8b
 
-**Next:** Stage 6 — Deploy (Vercel + Railway)
+**Next:** Stage 6 — Deploy (Vercel + Railway) ✅ (see below)
+
+---
+
+## [Stage 6 — Deploy] ✅
+
+**Completed:**
+- vercel.json: rootDirectory=apps/web, framework=nextjs
+- railway.toml: nixpacks build, daily cron 06:00 UTC, on_failure restart
+- apps/worker/run_pipeline.py: sequential stage runner (researcher→normalizer→writer→tagger→verifier)
+- .github/workflows/ci.yml: pytest (Python 3.11) + tsc + next build on push to main/deploy
+- deploy branch fast-forwarded to main (81 files, all stages 0–6)
+- Both branches pushed to origin/motus
+
+**Env vars to set in Vercel dashboard:**
+  NEXT_PUBLIC_SUPABASE_URL
+  NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+**Env vars to set in Railway dashboard:**
+  SUPABASE_URL
+  SUPABASE_SERVICE_ROLE_KEY
+  ANTHROPIC_API_KEY
+  PUBMED_API_KEY (optional)
+  SEMANTIC_SCHOLAR_API_KEY (optional)
+
+**Commit:** 28a4d8b
+
+**Next:** Connect Vercel + Railway dashboards to deploy branch, set env vars, smoke test
