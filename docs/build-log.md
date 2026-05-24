@@ -71,3 +71,22 @@
 **Commit:** (pending)
 
 **Next:** Stage 4 — Python Ingestion Pipeline
+
+---
+
+## [Stage 4 — Python Ingestion Pipeline] ✅
+
+**Completed:**
+- researcher.py: PubMed / Semantic Scholar / arXiv / RSS discovery, shared cross-source dedup sets, report logging
+- normalizer.py: abstract length gate (80 words), identifier check, cutoff date 2018, DOI dedup, field projection
+- writer.py: Anthropic API (haiku), 120-word limit, coaching/hedge phrase detection, 1 retry, cost logging
+- tagger.py: JSON extraction with allowlists, per-field confidence thresholds (0.60 / 0.85), status assignment
+- verifier.py: soft-reject policy gates (no sport, no evidence level, long summary, invalid DOI, all confidence < 0.60)
+- conftest.py: sys.path setup for pytest
+- test_normalizer.py: 26 tests covering word_count, _parse_date, _validate (8 cases), _normalize_paper, title_hash
+- test_verifier.py: 19 tests covering DOI regex, _verify_enrichment (all gate combinations)
+- 45/45 tests passing
+
+**Commit:** (pending)
+
+**Next:** Stage 5 — Frontend feed UI

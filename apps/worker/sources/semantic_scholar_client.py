@@ -1,1 +1,114 @@
-pass
+import os
+import time
+
+import httpx
+from dotenv import load_dotenv
+
+from utils.logger import get_logger
+
+load_dotenv()
+logger = get_logger(__name__)
+
+BASE_URL = 'https://api.semanticscholar.org/graph/v1/'
+FIELDS = 'title,abstract,authors,publicationVenue,publicationDate,externalIds,isOpenAccess,citationCount'
+
+SS_QUERIES = [
+    'endurance running performance',
+    'cycling physiology performance',
+    'VO2max training adaptation',
+    'sports nutrition endurance',
+    'running injury prevention',
+    'heart rate variability athletes',
+    'altitude training endurance',
+    'ultramarathon physiology',
+    'rowing performance biomechanics',
+    'strength training endurance athletes',
+]
+
+
+class SemanticScholarClient:
+    def __init__(self) -> None:
+        self.api_key: str = os.environ.get('SEMANTIC_SCHOLAR_API_KEY', '').strip()
+        self.delay: float = 1.1
+
+    def _check_key(self) -> bool:
+        if not self.api_key:
+            logger.warning('Semantic Scholar key not configured — skipping source')
+            return False
+        return True
+
+    def _get_headers(self) -> dict:
+        headers: dict = {}
+        if self.api_key:
+            headers['x-api-key'] = self.api_key
+        return headers
+
+    def search(self, query: str, max_results: int = 50) -> list[dict]:
+        if not self._check_key():
+            return []
+        params = {
+            'query': query,
+            'limit': min(max_results, 100),
+            'fields': FIELDS,
+        }
+        try:
+            resp = httpx.get(
+                BASE_URL + 'paper/search',
+                params=params,
+                headers=self._get_headers(),
+                timeout=30,
+            )
+            resp.raise_for_status()
+            time.sleep(self.delay)
+            data = resp.json()
+            papers = []
+            for item in data.get('data', []):
+                paper = self._normalize(item)
+                if paper:
+                    papers.append(paper)
+            return papers
+        except Exception as e:
+            logger.error(f'Semantic Scholar search error: {e}')
+            return []
+
+    def _normalize(self, item: dict) -> dict | None:
+        try:
+            title = (item.get('title') or '').strip()
+            if not title:
+                return None
+            doi = (item.get('externalIds') or {}).get('DOI')
+            paper_id = item.get('paperId', '')
+            venue = item.get('publicationVenue') or {}
+            journal = venue.get('name')
+            authors = [a.get('name', '') for a in (item.get('authors') or []) if a.get('name')]
+            return {
+                'title': title,
+                'abstract': item.get('abstract'),
+                'authors': authors,
+                'journal': journal,
+                'doi': doi,
+                'source_id': paper_id,
+                'source_name': 'semantic_scholar',
+                'source_url': f'https://www.semanticscholar.org/paper/{paper_id}' if paper_id else None,
+                'published_at': item.get('publicationDate'),
+            }
+        except Exception as e:
+            logger.error(f'Semantic Scholar normalize error: {e}')
+            return None
+
+    def search_all_queries(self) -> list[dict]:
+        if not self._check_key():
+            return []
+        seen_dois: set[str] = set()
+        results: list[dict] = []
+        for query in SS_QUERIES:
+            papers = self.search(query)
+            for paper in papers:
+                doi = paper.get('doi')
+                if doi and doi in seen_dois:
+                    continue
+                if doi:
+                    seen_dois.add(doi)
+                results.append(paper)
+        logger.info(f'Semantic Scholar complete: {len(results)} unique papers')
+        return results
