@@ -26,6 +26,9 @@ apps/web/node_modules/
 apps/web/.next/
 apps/web/out/
 
+# Worktree artifacts
+apps/web/..web_types_backup
+
 # Supabase
 .supabase/
 supabase/.temp/

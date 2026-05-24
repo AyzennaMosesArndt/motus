@@ -89,4 +89,25 @@
 
 **Commit:** (pending)
 
-**Next:** Stage 5 — Frontend feed UI
+**Next:** Stage 5 — Frontend feed UI ✅ (see below)
+
+---
+
+## [Stage 5 — Frontend Feed UI] ✅
+
+**Completed:**
+- Next.js 16.2.6 initialized (App Router, TypeScript, Tailwind v4, ESLint)
+- shadcn/ui: Badge, Button, Card, Separator, Skeleton
+- Supabase clients: lib/supabase/client.ts (browser) + server.ts (SSR)
+- EvidenceBadge.tsx: color-coded level 1–4 (green/blue/yellow/gray)
+- FeedCard.tsx: title link, journal/date, evidence badge, sport pills, 60-word summary excerpt
+- FeedList.tsx: list renderer with empty state
+- FilterBar.tsx: 'use client', sport filter via URL params
+- app/page.tsx: redirects to /new
+- app/new/page.tsx: Server Component, chronological feed with sport filter
+- app/paper/[id]/page.tsx: detail page with summary block, abstract, topics, source link
+- Build: 0 TypeScript errors, 4 routes (/, /new, /paper/[id], /_not-found)
+
+**Commit:** 8e4ac8b
+
+**Next:** Stage 6 — Deploy (Vercel + Railway)
