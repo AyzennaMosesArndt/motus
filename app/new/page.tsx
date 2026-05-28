@@ -5,43 +5,60 @@ import { FilterBar } from '@/components/feed/FilterBar'
 import type { PaperWithEnrichment } from '@/types/supabase'
 
 interface Props {
-  searchParams: Promise<{ sport?: string; topic?: string }>
+  searchParams: Promise<{
+    sport?: string
+    topic?: string
+    region?: string
+    search?: string
+  }>
 }
 
-async function PaperFeed({ sport }: { sport?: string }) {
+async function PaperFeed({
+  sport,
+  topic,
+  region,
+  search,
+}: {
+  sport?: string
+  topic?: string
+  region?: string
+  search?: string
+}) {
   const supabase = await createClient()
 
   let query = supabase
     .from('papers')
-    .select('*, enrichments(*)')
+    .select('*, enrichments!inner(*)')
     .eq('enrichments.enrichment_status', 'auto_committed')
     .order('created_at', { ascending: false })
     .limit(20)
 
-  if (sport) {
-    query = query.contains('enrichments.sports', [sport])
-  }
+  if (sport) query = query.contains('enrichments.sports', [sport])
+  if (topic) query = query.contains('enrichments.topics', [topic])
+  if (region) query = query.contains('enrichments.body_regions', [region])
+  if (search) query = query.ilike('title', `%${search}%`)
 
   const { data, error } = await query
 
   if (error) {
-    return <p className="text-red-500">Failed to load papers.</p>
+    return <p className="text-red-500 text-sm">Failed to load papers: {error.message}</p>
   }
 
   return <FeedList papers={(data ?? []) as PaperWithEnrichment[]} />
 }
 
 export default async function NewPage({ searchParams }: Props) {
-  const { sport } = await searchParams
+  const { sport, topic, region, search } = await searchParams
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Latest Research</h1>
+      <h1 className="text-2xl font-bold mb-1">Latest Research</h1>
+      <p className="text-sm text-gray-500 mb-6">New papers from PubMed, Semantic Scholar, and arXiv</p>
       <Suspense>
         <FilterBar />
       </Suspense>
-      <Suspense fallback={<p className="text-gray-400">Loading&hellip;</p>}>
-        <PaperFeed sport={sport} />
+      <Suspense fallback={<p className="text-gray-400 text-sm">Loading&hellip;</p>}>
+        <PaperFeed sport={sport} topic={topic} region={region} search={search} />
       </Suspense>
     </main>
   )

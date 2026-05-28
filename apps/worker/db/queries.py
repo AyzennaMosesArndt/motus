@@ -52,6 +52,20 @@ def paper_exists_by_doi(doi: str) -> bool:
     return bool(result.data)
 
 
+def paper_exists_in_queue(doi: str) -> bool:
+    """Check if a DOI is already waiting in ingestion_queue (pending or processing)."""
+    client = get_client()
+    result = (
+        client.table('ingestion_queue')
+        .select('id')
+        .filter('raw->>doi', 'eq', doi)
+        .in_('status', ['pending', 'processing'])
+        .limit(1)
+        .execute()
+    )
+    return bool(result.data)
+
+
 def paper_exists_by_title_hash(title_hash: str) -> bool:
     # We store title hash check in-memory across the run; DB has no title_hash column
     # This function is a no-op hook for future DB-side dedup

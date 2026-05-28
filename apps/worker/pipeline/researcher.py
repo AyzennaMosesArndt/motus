@@ -28,6 +28,8 @@ def _is_duplicate(paper: dict, seen_dois: set[str], seen_hashes: set[str]) -> bo
         return True
     if doi and queries.paper_exists_by_doi(doi):
         return True
+    if doi and queries.paper_exists_in_queue(doi):
+        return True
     return False
 
 
